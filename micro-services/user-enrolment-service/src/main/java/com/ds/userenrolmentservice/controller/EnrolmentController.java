@@ -5,6 +5,8 @@ import com.ds.userenrolmentservice.exception.EnrolmentCollectionException;
 import com.ds.userenrolmentservice.model.Enrolment;
 import com.ds.userenrolmentservice.repo.EnrolmentRepo;
 import com.ds.userenrolmentservice.service.EnrolmentService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ public class EnrolmentController {
     private EnrolmentRepo enrolmentRepo;
 
     @PostMapping("/addEnrolment")
+    @CircuitBreaker(name = "enrolmentService", fallbackMethod = "enrolmentServiceFallback")
     public ResponseEntity<?> createEnrolment(@RequestBody Enrolment enrolment) {
         try {
             enrolmentService.createEnrolment(enrolment);
@@ -34,6 +37,10 @@ public class EnrolmentController {
         }catch (EnrolmentCollectionException e){
             return ResponseHandler.responseBuilder(e.getMessage(), HttpStatus.CONFLICT, null);
         }
+    }
+
+    public ResponseEntity<?> enrolmentServiceFallback(Throwable throwable) {
+        return ResponseHandler.responseBuilder("Service Unavailable Try again later", HttpStatus.SERVICE_UNAVAILABLE, null);
     }
 
     @GetMapping("/getAllEnrolments")
