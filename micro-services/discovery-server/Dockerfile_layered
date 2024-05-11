@@ -1,0 +1,14 @@
+FROM eclipse-temurin:21.0.3_9-jre AS build
+WORKDIR extracted
+ADD target/*.jar app.jar
+RUN java -Djarmode=layertools -jar app.jar extract
+
+FROM eclipse-temurin:21.0.3_9-jre
+WORKDIR app
+COPY --from=build extracted/dependencies/ ./
+COPY --from=build extracted/snapshot-dependencies/ ./
+COPY --from=build extracted/spring-boot-loader/ ./
+COPY --from=build extracted/application/ ./
+
+EXPOSE 8080
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
