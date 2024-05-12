@@ -5,6 +5,7 @@ import com.ds.monitoringservice.model.LearnerProgress;
 import com.ds.monitoringservice.model.LearnerProgressResponse;
 import com.ds.monitoringservice.repo.LearnerProgressRepo;
 import com.ds.monitoringservice.service.LearnerProgressService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class LearnerProgressController {
     private LearnerProgressRepo learnerProgressRepo;
 
     @GetMapping("/getAllProgress")
+    @CircuitBreaker(name = "learnerProgressService", fallbackMethod = "learnerProgressServiceFallback")
     public ResponseEntity<?> getAllProgress() {
         LearnerProgressResponse learnerProgress = learnerProgressService.getAllProgress();
         if (learnerProgress != null && !learnerProgress.getLearnerProgressList().isEmpty()) {
@@ -32,6 +34,10 @@ public class LearnerProgressController {
         } else {
             return ResponseHandler.responseBuilder("No progress found", HttpStatus.NOT_FOUND, null);
         }
+    }
+
+    public ResponseEntity<?> learnerProgressServiceFallback(Throwable throwable) {
+        return ResponseHandler.responseBuilder("Service Unavailable Try again later", HttpStatus.SERVICE_UNAVAILABLE, null);
     }
 
     @GetMapping("/getCourseIdCounts")
