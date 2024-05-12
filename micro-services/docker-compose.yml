@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   keycloak:
     container_name: keycloak
@@ -20,7 +18,7 @@ services:
       - "9411:9411"
 
   discovery-server:
-    image: shadhir03/discoveryserver-docker:latest
+    image: shadhir03/discovery-server-d:latest
     container_name: discovery-server
     pull_policy: always
     ports:
@@ -31,7 +29,7 @@ services:
       - zipkin
 
   api-gateway:
-    image: shadhir03/apigateway-docker:latest
+    image: shadhir03/api-gateway-d:latest
     container_name: api-gateway
     pull_policy: always
     ports:
@@ -41,40 +39,45 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY= TRACE
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka/
     depends_on:
       - discovery-server
       - zipkin
       - keycloak
 
   course-service:
-    image: shadhir03/courseservice-docker:latest
-    container_name: course-service
-    pull_policy: always
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - api-gateway
-      - discovery-server
-      - keycloak
+      image: shadhir03/course-service-d:latest
+      container_name: course-service
+      pull_policy: always
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+        - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka/
+      depends_on:
+        - api-gateway
+        - discovery-server
+        - keycloak
 
   user-enrolment-service:
-    image: shadhir03/userenrolmentservice-docker:latest
-    container_name: user-enrolment-service
-    pull_policy: always
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - api-gateway
-      - discovery-server
-      - course-service
-      - keycloak
+      image: shadhir03/user-enrolment-service-d:latest
+      container_name: user-enrolment-service
+      pull_policy: always
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+        - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka/
+      depends_on:
+        - api-gateway
+        - discovery-server
+        - course-service
+        - keycloak
+
 
   monitoring-service:
-    image: shadhir03/monitoringservice-docker:latest
+    image: shadhir03/monitoring-service-d:latest
     container_name: monitoring-service
     pull_policy: always
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka/
     depends_on:
       - api-gateway
       - discovery-server
@@ -83,22 +86,24 @@ services:
       - keycloak
 
   email-service:
-    image: shadhir03/emailservice-docker:latest
+    image: shadhir03/email-service-d:latest
     container_name: email-service
     pull_policy: always
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka/
     depends_on:
       - api-gateway
       - discovery-server
       - keycloak
 
   stripe-service:
-    image: shadhir03/stripeservice-docker:latest
+    image: shadhir03/stripe-service-d:latest
     container_name: stripe-service
     pull_policy: always
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka/
     depends_on:
       - api-gateway
       - discovery-server
