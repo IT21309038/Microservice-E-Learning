@@ -1,0 +1,106 @@
+version: '3.7'
+
+services:
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./realm/:/opt/keycloak/data/import
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+
+  discovery-server:
+    image: shadhir03/discoveryserver-docker:latest
+    container_name: discovery-server
+    pull_policy: always
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - zipkin
+
+  api-gateway:
+    image: shadhir03/apigateway-docker:latest
+    container_name: api-gateway
+    pull_policy: always
+    ports:
+      - "8181:8080"
+    expose:
+      - "8181"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY= TRACE
+    depends_on:
+      - discovery-server
+      - zipkin
+      - keycloak
+
+  course-service:
+    image: shadhir03/courseservice-docker:latest
+    container_name: course-service
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - api-gateway
+      - discovery-server
+      - keycloak
+
+  user-enrolment-service:
+    image: shadhir03/userenrolmentservice-docker:latest
+    container_name: user-enrolment-service
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - api-gateway
+      - discovery-server
+      - course-service
+      - keycloak
+
+  monitoring-service:
+    image: shadhir03/monitoringservice-docker:latest
+    container_name: monitoring-service
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - api-gateway
+      - discovery-server
+      - course-service
+      - user-enrolment-service
+      - keycloak
+
+  email-service:
+    image: shadhir03/emailservice-docker:latest
+    container_name: email-service
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - api-gateway
+      - discovery-server
+      - keycloak
+
+  stripe-service:
+    image: shadhir03/stripeservice-docker:latest
+    container_name: stripe-service
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - api-gateway
+      - discovery-server
+      - email-service
+      - keycloak
