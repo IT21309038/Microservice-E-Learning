@@ -65,7 +65,8 @@ public class EnrolmentController {
     @GetMapping("/getEnrolmentByUserId/{userId}")
     public ResponseEntity<?> getEnrolmentByUserId(@PathVariable("userId") String userId) {
         try {
-            return ResponseHandler.responseBuilder("Enrolment retrieved successfully", HttpStatus.OK, enrolmentService.getEnrolmentByUserId(userId));
+            List<Enrolment> enrolments = enrolmentService.getEnrolmentByUserId(userId);
+            return ResponseHandler.responseBuilder("Enrolments retrieved successfully", HttpStatus.OK, enrolments);
         } catch (EnrolmentCollectionException e) {
             return ResponseHandler.responseBuilder(e.getMessage(), HttpStatus.NOT_FOUND, null);
         }
@@ -74,7 +75,8 @@ public class EnrolmentController {
     @GetMapping("/getEnrolmentByCourseId/{courseId}")
     public ResponseEntity<?> getEnrolmentByCourseId(@PathVariable("courseId") String courseId) {
         try {
-            return ResponseHandler.responseBuilder("Enrolment retrieved successfully", HttpStatus.OK, enrolmentService.getEnrolmentByCourseId(courseId));
+            List<Enrolment> enrolments = enrolmentService.getEnrolmentByCourseId(courseId);
+            return ResponseHandler.responseBuilder("Enrolments retrieved successfully", HttpStatus.OK, enrolments);
         } catch (EnrolmentCollectionException e) {
             return ResponseHandler.responseBuilder(e.getMessage(), HttpStatus.NOT_FOUND, null);
         }

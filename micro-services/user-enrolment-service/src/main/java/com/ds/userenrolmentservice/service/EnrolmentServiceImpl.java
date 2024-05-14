@@ -72,21 +72,21 @@ public class EnrolmentServiceImpl implements EnrolmentService {
 
     @Override
     public List<Enrolment> getEnrolmentByUserId(String userId) throws EnrolmentCollectionException {
-        Optional<Enrolment> optEnrolment = enrolmentRepo.findByUserId(userId);
-        if(optEnrolment.isEmpty()){
+        List<Enrolment> enrolments = enrolmentRepo.findByUserId(userId);
+        if(enrolments.isEmpty()){
             throw new EnrolmentCollectionException(EnrolmentCollectionException.NotFoundException(userId));
         }else {
-            return List.of(optEnrolment.get());
+            return enrolments;
         }
     }
 
     @Override
     public List<Enrolment> getEnrolmentByCourseId(String courseId) throws EnrolmentCollectionException {
-        Optional<Enrolment> optEnrolment = enrolmentRepo.findByCourseId(courseId);
-        if(optEnrolment.isEmpty()){
+        List<Enrolment> enrolments = enrolmentRepo.findByCourseId(courseId);
+        if(enrolments.isEmpty()){
             throw new EnrolmentCollectionException(EnrolmentCollectionException.NotFoundException(courseId));
         }else {
-            return List.of(optEnrolment.get());
+            return enrolments;
         }
     }
 
