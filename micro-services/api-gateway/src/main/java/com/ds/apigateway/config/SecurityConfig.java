@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .addFilterAt(corsFilter, SecurityWebFiltersOrder.FIRST)
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange -> exchange
-                        .pathMatchers("/eureka/**", "api/v1/courses/add-course")
+                        .pathMatchers("/eureka/**", "/api/v1/courses/add-course", "/api/v1/content/add-course-content/**")
                         .permitAll()
                         .anyExchange()
                         .authenticated())
