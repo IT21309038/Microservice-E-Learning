@@ -1,0 +1,41 @@
+name: CI/CD Pipeline for Microservices
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [user-enrolment-service, course-service, stripe-service, monitoring-service]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build with Maven - ${{ matrix.service }}
+        run: mvn clean package --file micro-services/${{ matrix.service }}/pom.xml
+
+      - name: Run Tests - ${{ matrix.service }}
+        run: mvn test --file micro-services/${{ matrix.service }}/pom.xml
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker Image - ${{ matrix.service }}
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest micro-services/${{ matrix.service }}
+
+      - name: Push Docker Image - ${{ matrix.service }}
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest
+
