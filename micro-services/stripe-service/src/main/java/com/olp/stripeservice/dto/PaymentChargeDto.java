@@ -6,13 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class StripeChargeDto {
-    private String stripeToken;
+public class PaymentChargeDto {
     private String userId;
     private String courseId;
     private Double amount;
     private Boolean success;
     private String message;
-    private String chargeId;
+    private String cardNumber;
+    private String cardExpiryMonth;
+    private String cardExpiryYear;
     private Map<String,Object> additionalInfo = new HashMap<>();
 }

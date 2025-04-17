@@ -1,9 +1,9 @@
 package com.olp.stripeservice.controller;
 
-import com.olp.stripeservice.dto.StripeChargeDto;
+import com.olp.stripeservice.dto.PaymentChargeDto;
 import com.olp.stripeservice.model.Payment;
 import com.olp.stripeservice.repository.PaymentRepository;
-import com.olp.stripeservice.service.StripeService;
+import com.olp.stripeservice.service.PaymentService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,21 +15,21 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/api/v1/stripe")
 @AllArgsConstructor
-public class StripeController {
+public class PaymentController {
 
-    private final StripeService stripeService;
+    private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
 
     @PostMapping("/charge")
     @ResponseBody
     @CircuitBreaker(name = "stripeService", fallbackMethod = "chargeFallback")
-    public StripeChargeDto charge(@RequestBody StripeChargeDto model) {
+    public PaymentChargeDto charge(@RequestBody PaymentChargeDto model) {
 
-        return stripeService.charge(model);
+        return paymentService.charge(model);
     }
 
-    public StripeChargeDto chargeFallback(Throwable throwable) {
-        return new StripeChargeDto();
+    public PaymentChargeDto chargeFallback(Throwable throwable) {
+        return new PaymentChargeDto();
     }
 
     @GetMapping("/payments")
