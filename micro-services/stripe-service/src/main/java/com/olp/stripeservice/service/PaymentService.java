@@ -95,7 +95,7 @@ public class PaymentService {
                 .subscribe();
     }
 
-    private boolean isValidExpiryDate(String expiryMonth, String expiryYear) {
+    public boolean isValidExpiryDate(String expiryMonth, String expiryYear) {
         if (expiryMonth == null || expiryYear == null) {
             return false;
         }
@@ -121,7 +121,7 @@ public class PaymentService {
     }
 
 
-    private boolean isValidCardNumber(String cardNumber) {
+    public boolean isValidCardNumber(String cardNumber) {
         if (cardNumber == null) {
             return false;
         }
