@@ -20,7 +20,7 @@ import java.util.Map;
 public class Payment {
     @Id
     private String id;
-    private String stripeChargeId;
+//    private String stripeChargeId;
     private String userId;
     private String courseId;
     private Double amount;
