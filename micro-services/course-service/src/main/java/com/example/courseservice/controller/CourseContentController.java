@@ -24,14 +24,9 @@ public class CourseContentController {
     @Autowired
     private ImageUploadService imageService;
 
-    //Retrieve course content by course ID
-    @GetMapping("get-course-content/{courseID}")
-    private ResponseEntity<?> getCourseContent(@PathVariable("courseID") String code){
-        try{
-            return ResponseHandler.responseBuilder("Course Conetent found", HttpStatus.OK, courseContentService.getContent(code));
-        } catch (Exception e){
-            return ResponseHandler.responseBuilder(e.getMessage(),HttpStatus.BAD_REQUEST,null);
-        }
+    @PostMapping
+    public String upload(@RequestParam("file") MultipartFile multipartFile) {
+        return imageService.upload(multipartFile);
     }
 
     //POST requests to add course content
@@ -52,10 +47,16 @@ public class CourseContentController {
         }
     }
 
-    @PostMapping
-    public String upload(@RequestParam("file") MultipartFile multipartFile) {
-        return imageService.upload(multipartFile);
+    //Retrieve course content by course ID
+    @GetMapping("get-course-content/{courseID}")
+    private ResponseEntity<?> getCourseContent(@PathVariable("courseID") String code){
+        try{
+            return ResponseHandler.responseBuilder("Course Conetent found", HttpStatus.OK, courseContentService.getContent(code));
+        } catch (Exception e){
+            return ResponseHandler.responseBuilder(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+        }
     }
+
 
     // PUT requests to update course content
     @PutMapping("/update-course-content/{courseID}")
