@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [user-enrolment-service, course-service, stripe-service, monitoring-service]
+        service: [user-enrolment-service, course-service,
+                  stripe-service, monitoring-service, api-gateway, discovery-server]
 
     steps:
       - name: Checkout Code
