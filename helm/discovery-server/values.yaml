@@ -7,8 +7,8 @@ image:
 
 service:
   type: LoadBalancer
-  port: 80
-  targetPort: 8080
+  port: 8761
+  targetPort: 8761
 
 resources:
   requests:
