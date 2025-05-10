@@ -21,17 +21,6 @@ public class CourseController {
     @Autowired
     private ImageUploadService imageService;
 
-    // GET request to get all courses
-    @GetMapping("/get-all-courses")
-    public ResponseEntity<?> getAllCourses(){
-        List<Course> courseList = courseService.getAllCourses();
-        if(!courseList.isEmpty()){
-            return ResponseHandler.responseBuilder("Get all courses",  HttpStatus.OK ,courseList);
-        } else {
-            return ResponseHandler.responseBuilder("No courses available", HttpStatus.NOT_FOUND, null);
-        }
-    }
-
     // POST request to add course
     @PostMapping("/add-course")
     public ResponseEntity<?> addCourse(@RequestPart("course") Course course, @RequestPart("file") MultipartFile file){
@@ -44,6 +33,18 @@ public class CourseController {
         }
     }
 
+    // GET request to get all courses
+    @GetMapping("/get-all-courses")
+    public ResponseEntity<?> getAllCourses(){
+        List<Course> courseList = courseService.getAllCourses();
+        if(!courseList.isEmpty()){
+            return ResponseHandler.responseBuilder("Get all courses",  HttpStatus.OK ,courseList);
+        } else {
+            return ResponseHandler.responseBuilder("No courses available", HttpStatus.NOT_FOUND, null);
+        }
+    }
+
+
     // GET request to get course by code
     @GetMapping("/get-course-by-code/{code}")
     public ResponseEntity<?> getCourseByCode(@PathVariable("code") String code){
@@ -51,6 +52,17 @@ public class CourseController {
             return ResponseHandler.responseBuilder("Course found", HttpStatus.OK, courseService.getCourseByCode(code));
         } catch (Exception e){
             return ResponseHandler.responseBuilder(e.getMessage(), HttpStatus.NOT_FOUND, null);
+        }
+    }
+
+    // Get request to get all courses by conductorId
+    @GetMapping("Get-all-courses-by-conductorId/{conductorId}")
+    public ResponseEntity<?> getAllCoursesByConductorId(@PathVariable("conductorId") String conductorId){
+        List<Course> courseList = courseService.getAllCoursesByConductorId(conductorId);
+        if(!courseList.isEmpty()){
+            return ResponseHandler.responseBuilder("Get all courses by conductorId",  HttpStatus.OK ,courseList);
+        } else {
+            return ResponseHandler.responseBuilder("No courses available", HttpStatus.NOT_FOUND, null);
         }
     }
 
@@ -75,19 +87,4 @@ public class CourseController {
             return ResponseHandler.responseBuilder("No unapproved courses available", HttpStatus.NOT_FOUND, null);
         }
     }
-
-    // Get request to get all courses by conductorId
-    @GetMapping("Get-all-courses-by-conductorId/{conductorId}")
-    public ResponseEntity<?> getAllCoursesByConductorId(@PathVariable("conductorId") String conductorId){
-        List<Course> courseList = courseService.getAllCoursesByConductorId(conductorId);
-        if(!courseList.isEmpty()){
-            return ResponseHandler.responseBuilder("Get all courses by conductorId",  HttpStatus.OK ,courseList);
-        } else {
-            return ResponseHandler.responseBuilder("No courses available", HttpStatus.NOT_FOUND, null);
-        }
-    }
-
-
-
-
 }
