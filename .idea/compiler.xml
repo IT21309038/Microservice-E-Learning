@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="course-service" />
         <module name="discovery-server" />
+        <module name="payment-service" />
         <module name="stripe-service" />
         <module name="email-service" />
         <module name="api-gateway" />
@@ -23,6 +24,7 @@
       <module name="discovery-server" options="-parameters" />
       <module name="email-service" options="-parameters" />
       <module name="monitoring-service" options="-parameters" />
+      <module name="payment-service" options="-parameters" />
       <module name="stripe-service" options="-parameters" />
       <module name="user-enrolment-service" options="-parameters" />
     </option>
