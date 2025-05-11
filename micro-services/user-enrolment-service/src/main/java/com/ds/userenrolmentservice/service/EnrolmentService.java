@@ -30,4 +30,6 @@ public interface EnrolmentService {
 
     public Enrolment updateEnrolmentStatus(String userId, String courseId, Boolean status)
             throws EnrolmentCollectionException;
+
+    public String HelloWorld() throws EnrolmentCollectionException;
 }

@@ -124,4 +124,13 @@ public class EnrolmentServiceImpl implements EnrolmentService {
             return enrolment;
         }
     }
+
+    @Override
+    public String HelloWorld() throws EnrolmentCollectionException {
+
+        String hello = "Hello";
+        String world = "World";
+
+        return hello + " " + world;
+    }
 }

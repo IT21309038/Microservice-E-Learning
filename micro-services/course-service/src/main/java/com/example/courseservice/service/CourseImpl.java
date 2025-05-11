@@ -28,6 +28,16 @@ public class CourseImpl implements CourseService{
     }
 
     @Override
+    public List<Course> getUnApprovedCourses() {
+        List<Course> courseList = courseRepo.findUnapprovedCourses();
+        if(!courseList.isEmpty()){
+            return courseList;
+        } else {
+            return new ArrayList<Course>();
+        }
+    }
+
+    @Override
     public void CreateCourse(Course course,String Url) throws CourseCollectionException {
 
         //Checking if the course code or name already exists
@@ -61,6 +71,16 @@ public class CourseImpl implements CourseService{
     }
 
     @Override
+    public List<Course> getAllCoursesByConductorId(String conductorId) {
+        List<Course> courseList = courseRepo.findCoursesByConductorId(conductorId);
+        if(!courseList.isEmpty()){
+            return courseList;
+        } else {
+            return new ArrayList<Course>();
+        }
+    }
+
+    @Override
     public List<Course> getApprovedCourses() {
         List<Course> courseList = courseRepo.findApprovedCourses();
         if(!courseList.isEmpty()){
@@ -70,25 +90,9 @@ public class CourseImpl implements CourseService{
         }
     }
 
-    @Override
-    public List<Course> getUnApprovedCourses() {
-        List<Course> courseList = courseRepo.findUnapprovedCourses();
-        if(!courseList.isEmpty()){
-            return courseList;
-        } else {
-            return new ArrayList<Course>();
-        }
-    }
 
-    @Override
-    public List<Course> getAllCoursesByConductorId(String conductorId) {
-        List<Course> courseList = courseRepo.findCoursesByConductorId(conductorId);
-        if(!courseList.isEmpty()){
-            return courseList;
-        } else {
-            return new ArrayList<Course>();
-        }
-    }
+
+
 
 
 }

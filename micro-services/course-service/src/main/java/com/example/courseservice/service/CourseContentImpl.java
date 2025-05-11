@@ -25,17 +25,6 @@ public class CourseContentImpl implements CourseContentService{
 
 
     @Override
-    public List<CourseContent> getContent(String code) throws CourseCollectionException {
-        List<CourseContent> courseList = courseContentRepo.findByCode(code);
-        if (!courseList.isEmpty()){
-            return courseList;
-        } else {
-            throw new CourseCollectionException(CourseCollectionException.CourseContentNotFoundException(code));
-        }
-
-    }
-
-    @Override
     public void addCourseContent(String ID,CourseContent courseContent, Media media) throws CourseCollectionException {
 
         //Checking if the course exists
@@ -50,6 +39,20 @@ public class CourseContentImpl implements CourseContentService{
         courseContent.setCreatedAt(new Date(System.currentTimeMillis()));
         courseContentRepo.save(courseContent);
     }
+
+
+    @Override
+    public List<CourseContent> getContent(String code) throws CourseCollectionException {
+        List<CourseContent> courseList = courseContentRepo.findByCode(code);
+        if (!courseList.isEmpty()){
+            return courseList;
+        } else {
+            throw new CourseCollectionException(CourseCollectionException.CourseContentNotFoundException(code));
+        }
+
+    }
+
+
 
     @Override
     public void updateCourseContent(String ID,CourseContent courseContent) throws CourseCollectionException {
