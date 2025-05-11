@@ -115,11 +115,12 @@ public class EnrolmentController {
         }
     }
 
+    //Hello World endpoint for testing
     @GetMapping("/helloWorld")
     public ResponseEntity<?> helloWorld() throws EnrolmentCollectionException {
         String response = enrolmentService.HelloWorld();
         if (response != null) {
-            return ResponseHandler.responseBuilder("Success", HttpStatus.OK, response);
+            return ResponseHandler.responseBuilder("Success message", HttpStatus.OK, response);
         } else {
             return ResponseHandler.responseBuilder("Service Unavailable", HttpStatus.SERVICE_UNAVAILABLE, null);
         }
